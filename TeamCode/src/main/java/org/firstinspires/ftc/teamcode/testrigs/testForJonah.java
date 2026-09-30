@@ -1,14 +1,11 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.testrigs;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-
-@TeleOp(name="test fpr max", group="Linear OpMode")
-public class testForMax extends LinearOpMode {
+@TeleOp(name="test for Jonah", group="Linear OpMode")
+public class testForJonah extends LinearOpMode {
     DcMotor test = null;
 
     public void runOpMode(){
@@ -37,11 +34,14 @@ public class testForMax extends LinearOpMode {
         test.setPower(testPower);
         */
         while(opModeIsActive()){
-            test.setPower(gamepad1.right_stick_y * 0.250);
+            test.setPower(gamepad1.right_stick_y * 1);
+        }
+        while(opModeIsActive()){
+            test.setPower(gamepad1.left_stick_y * 2);
         }
     }
     public void buildTelemetry(){
         //myOpMode.telemetry.addData("testPower",test.getPower());
         //
-        }
+    }
 }
