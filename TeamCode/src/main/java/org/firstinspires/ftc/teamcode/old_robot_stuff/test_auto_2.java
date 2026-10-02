@@ -5,13 +5,6 @@ import androidx.annotation.NonNull;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
-import com.acmerobotics.roadrunner.ParallelAction;
-import com.acmerobotics.roadrunner.Pose2d;
-import com.acmerobotics.roadrunner.SequentialAction;
-import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
-import com.acmerobotics.roadrunner.TranslationalVelConstraint;
-import com.acmerobotics.roadrunner.Vector2d;
-import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -22,12 +15,10 @@ import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.teamcode.MecanumDrive;
-
 @Config
-@Autonomous(name = "test_auto_1", group = "Autonomous")
+@Autonomous(name = "test_auto_2", group = "Autonomous")
 
-public class test_auto_1 extends LinearOpMode{
+public class test_auto_2 extends LinearOpMode{
 
     // if odometry is not properly tuned or constantly being retuned:
     // you MIGHT find it useful to change these values and use multiples of them instead of direct number
@@ -334,22 +325,6 @@ public class test_auto_1 extends LinearOpMode{
 
         flywheel = new ShooterControl(hardwareMap);
 
-
-        Pose2d poseInit = new Pose2d(0, 0, Math.toRadians(0));
-        Pose2d pose2 = new Pose2d(-24, 24, Math.toRadians(0));
-
-        MecanumDrive drive = new MecanumDrive(hardwareMap, poseInit);
-        outtakeMotor shooter = new outtakeMotor(hardwareMap);
-        transferServo transfer = new transferServo(hardwareMap);
-        intakeServo intake = new intakeServo(hardwareMap);
-        flickServo flicker = new flickServo(hardwareMap);
-
-        TrajectoryActionBuilder one = drive.actionBuilder(poseInit)
-                .strafeToLinearHeading(new Vector2d(-24, 24), Math.toRadians(0));//, new TranslationalVelConstraint(10));
-
-        TrajectoryActionBuilder two = drive.actionBuilder(pose2)
-                .strafeToLinearHeading(new Vector2d(-84, 48), Math.toRadians(0));//, new TranslationalVelConstraint(10)); //counterclockwise by default
-
         /*
         Pose2d pose0 = new Pose2d(0, 0, Math.toRadians(0));
         Pose2d pose2 = new Pose2d(45, -20, Math.toRadians(-45));
@@ -413,31 +388,6 @@ public class test_auto_1 extends LinearOpMode{
         waitForStart();
 
         if (isStopRequested()) return;
-
-        Actions.runBlocking(
-            new SequentialAction(
-
-                shooter.fireUp(),
-                new ParallelAction(
-                    shooter.hold(),
-                    transfer.toAOut(),
-                    new SequentialAction(
-
-                        flicker.kick(),
-                        flicker.goBack(),
-                        transfer.toBOut(),
-                        flicker.kick(),
-                        flicker.goBack(),
-                        transfer.toCOut(),
-                        flicker.kick(),
-                        flicker.goBack(),
-
-                        one.build(),
-                        two.build()
-                    )
-                )
-            )
-        );
 
         /*
         Actions.runBlocking(
