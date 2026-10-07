@@ -336,7 +336,7 @@ public class test_auto_1 extends LinearOpMode{
 
 
         Pose2d poseInit = new Pose2d(0, 0, Math.toRadians(0));
-        Pose2d pose2 = new Pose2d(-24, 24, Math.toRadians(0));
+        Pose2d pose2 = new Pose2d(-24, -24, Math.toRadians(0));
 
         MecanumDrive drive = new MecanumDrive(hardwareMap, poseInit);
         outtakeMotor shooter = new outtakeMotor(hardwareMap);
@@ -345,10 +345,10 @@ public class test_auto_1 extends LinearOpMode{
         flickServo flicker = new flickServo(hardwareMap);
 
         TrajectoryActionBuilder one = drive.actionBuilder(poseInit)
-                .strafeToLinearHeading(new Vector2d(-24, 24), Math.toRadians(0));//, new TranslationalVelConstraint(10));
+                .strafeToLinearHeading(new Vector2d(-24, -24), Math.toRadians(0));//, new TranslationalVelConstraint(10));
 
         TrajectoryActionBuilder two = drive.actionBuilder(pose2)
-                .strafeToLinearHeading(new Vector2d(-84, 48), Math.toRadians(0));//, new TranslationalVelConstraint(10)); //counterclockwise by default
+                .strafeToLinearHeading(new Vector2d(-84, -48), Math.toRadians(0));//, new TranslationalVelConstraint(10)); //counterclockwise by default
 
         /*
         Pose2d pose0 = new Pose2d(0, 0, Math.toRadians(0));
