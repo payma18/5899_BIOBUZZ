@@ -34,7 +34,7 @@ public class testForMax extends LinearOpMode {
         test.setPower(testPower);
         */
         while(opModeIsActive()){
-            test.setPower(gamepad1.right_stick_y * 0.5);
+            test.setPower(gamepad1.right_stick_y * 0.4);
         }
     }
     public void buildTelemetry(){
