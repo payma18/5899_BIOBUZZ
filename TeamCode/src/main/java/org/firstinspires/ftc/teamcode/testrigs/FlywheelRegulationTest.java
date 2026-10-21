@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.testrigs;
 
 import static java.lang.Math.ceil;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -29,7 +31,7 @@ public class FlywheelRegulationTest extends LinearOpMode {
     double rampingRPM = 0;
     double maxRPM = 5000; //TODO: find a value
     double currentRPM, smoothedRPM; // currentRPM from getVelocity will always have noise, so smoothedRPM will make it a little more steady
-    double correctPow;
+    double correctPow, smoothedPow = 1;
 
     double voltCorr =1.5;
     double Kp = 0.009;
@@ -52,7 +54,7 @@ public class FlywheelRegulationTest extends LinearOpMode {
             firstLoop = false;
         }
 
-        smoothedRPM = (0.9 * smoothedRPM + 0.1 * currentRPM);
+        smoothedRPM = (0.90 * smoothedRPM + 0.1 * currentRPM);
 
         error = targetRPM - smoothedRPM;
 
@@ -64,10 +66,11 @@ public class FlywheelRegulationTest extends LinearOpMode {
         correctPow = (Kp * error) + (Ki * integralSum) + (Kd * derivative) + (Kf * targetRPM * 12.6 / (Math.pow(batteryVoltage, voltCorr)));
 
         correctPow = Range.clip(correctPow,-1,1);
+        smoothedPow = (smoothedPow * 0.85) + (correctPow * 0.15);
 
         lastError = error;
 
-        return correctPow;
+        return smoothedPow;
 
     }
     public void flywheelUpdate() {
@@ -113,14 +116,18 @@ public class FlywheelRegulationTest extends LinearOpMode {
 
         timer.reset();
 
+        MultipleTelemetry mtelemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         waitForStart();
 
         while (opModeIsActive()) {
             if (gamepad1.a) targetRPM++;
             if (gamepad1.b) targetRPM--;
             flywheelHold();
-            telemetry.addData("target:", targetRPM);
-            telemetry.update();
+            mtelemetry.addData("target", targetRPM);
+            mtelemetry.addData("RPM", smoothedRPM);
+            mtelemetry.addData("Power", correctPow);
+            mtelemetry.addData("Used Power", smoothedPow);
+            mtelemetry.update();
         }
     }
 }
