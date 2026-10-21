@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 
 @TeleOp(name="TestTeleop", group="Linear OpMode")
-public class TestTeleopGoldenEye extends LinearOpMode {
+public class TestTeleop extends LinearOpMode {
     private DcMotor leftFrontDrive;
     private DcMotor leftBackDrive;
     private DcMotor rightFrontDrive;
