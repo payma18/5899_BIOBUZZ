@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import java.lang.Math;
 
 
 @TeleOp(name="TestTeleop", group="Linear OpMode")
@@ -14,8 +13,7 @@ public class TestTeleopGoldenEye extends LinearOpMode {
     private DcMotor rightBackDrive;
     private DcMotor intake;
     private DcMotor outtake;
-    
-    //private Servo flowerintake;
+
 
     @Override
     public void runOpMode() {
@@ -65,18 +63,45 @@ public class TestTeleopGoldenEye extends LinearOpMode {
                 leftBackPower /= max;
                 rightBackPower /= max;
             }
+
+            if (gamepad1.a){
+                if(keyA == false) {
+                    keyA = !keyA;
+                    switch ((int)(speed * 10)){
+                        case 10 : speed = .05; break;
+                        case 5 : speed = 1.0; break;
+                    }
+                }
+            }else{
+                keyA = false;
+            }
+
+            if (gamepad1.b){
+                if (keyB == false){
+                    keyB = !keyB;
+                    invertDir = !invertDir;
+                    if (invertDir){
+                        invDir = -1;
+                    }else{
+                        invDir = 1;
+                    }
+                }
+            }else{
+                invDir = 1;
+            }
+
             leftFrontDrive.setPower(leftFrontPower * speed * invDir);
             leftBackDrive.setPower(leftBackPower * speed * invDir);
             rightFrontDrive.setPower(rightFrontPower * speed * invDir);
             rightBackDrive.setPower(rightBackPower * speed * invDir);
 
-            if (gamepad1.a) {
+            if (gamepad1.y) {
                 intake.setPower(.5);
             } else {
                 intake.setPower(0.0);
             }
 
-            if (gamepad1.b) {
+            if (gamepad1.x) {
                 outtake.setPower(0.4);
             } else {
                 outtake.setPower(0.0);
