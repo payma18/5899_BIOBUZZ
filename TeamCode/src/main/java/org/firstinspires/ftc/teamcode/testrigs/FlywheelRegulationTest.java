@@ -112,7 +112,7 @@ public class FlywheelRegulationTest extends LinearOpMode {
         battery = hardwareMap.voltageSensor.iterator().next();
         flywheel = hardwareMap.get(DcMotorEx.class, "test");
         flywheel.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
-        flywheel.setDirection(DcMotorEx.Direction.REVERSE); // pick the correct one
+        flywheel.setDirection(DcMotorEx.Direction.FORWARD); // pick the correct one
 
         timer.reset();
 
