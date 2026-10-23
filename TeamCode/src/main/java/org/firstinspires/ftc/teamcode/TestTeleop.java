@@ -11,8 +11,8 @@ public class TestTeleop extends LinearOpMode {
     private DcMotor leftBackDrive;
     private DcMotor rightFrontDrive;
     private DcMotor rightBackDrive;
-    private DcMotor intake;
-    private DcMotor outtake;
+     private DcMotor intake;
+    // private DcMotor outtake;
 
 
     @Override
@@ -30,7 +30,7 @@ public class TestTeleop extends LinearOpMode {
         rightFrontDrive = hardwareMap.get(DcMotor.class, "rightFrontDrive");
         rightBackDrive = hardwareMap.get(DcMotor.class, "rightBackDrive");
         intake = hardwareMap.get(DcMotor.class, "intake");
-        outtake = hardwareMap.get(DcMotor.class,"outtake");
+        // outtake = hardwareMap.get(DcMotor.class,"outtake");
 
         leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
         leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
@@ -55,38 +55,42 @@ public class TestTeleop extends LinearOpMode {
             // This ensures that the robot maintains the desired motion.
             max = Math.max(Math.abs(leftFrontPower), Math.abs(rightFrontPower));
             max = Math.max(max, Math.abs(leftBackPower));
-            max= Math.max(max, Math.abs(rightBackPower));
+            max = Math.max(max, Math.abs(rightBackPower));
 
-            if (max > 1.0){
+            if (max > 1.0) {
                 leftFrontPower /= max;
                 rightFrontPower /= max;
                 leftBackPower /= max;
                 rightBackPower /= max;
             }
 
-            if (gamepad1.a){
-                if(keyA == false) {
+            if (gamepad1.a) {
+                if (keyA == false) {
                     keyA = !keyA;
-                    switch ((int)(speed * 10)){
-                        case 10 : speed = .05; break;
-                        case 5 : speed = 1.0; break;
+                    switch ((int) (speed * 10)) {
+                        case 10:
+                            speed = .05;
+                            break;
+                        case 5:
+                            speed = 1.0;
+                            break;
                     }
                 }
-            }else{
+            } else {
                 keyA = false;
             }
 
-            if (gamepad1.b){
-                if (keyB == false){
+            if (gamepad1.b) {
+                if (keyB == false) {
                     keyB = !keyB;
                     invertDir = !invertDir;
-                    if (invertDir){
+                    if (invertDir) {
                         invDir = -1;
-                    }else{
+                    } else {
                         invDir = 1;
                     }
                 }
-            }else{
+            } else {
                 invDir = 1;
             }
 
@@ -101,15 +105,15 @@ public class TestTeleop extends LinearOpMode {
                 intake.setPower(0.0);
             }
 
-            if (gamepad1.x) {
-                outtake.setPower(0.4);
-            } else {
-                outtake.setPower(0.0);
-            }
-
+            //   if (gamepad1.x) {
+            //       outtake.setPower(0.4);
+            //   } else {
+            //       outtake.setPower(0.0);
         }
+
     }
 }
+
 
 
 
