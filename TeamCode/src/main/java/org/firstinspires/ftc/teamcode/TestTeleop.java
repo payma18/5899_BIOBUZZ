@@ -4,9 +4,7 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.VoltageSensor;
+import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -18,6 +16,8 @@ public class TestTeleop extends LinearOpMode {
     private DcMotor rightFrontDrive;
     private DcMotor rightBackDrive;
     private DcMotor intake;
+    private Servo lowerTransfer;
+    private Servo upperTransfer;
     VoltageSensor battery;
     enum FlywheelState {RAMP, HOLD, DOWN};
     FlywheelState state = FlywheelState.RAMP;
@@ -113,23 +113,18 @@ public class TestTeleop extends LinearOpMode {
     public void runOpMode() {
 
         battery = hardwareMap.voltageSensor.iterator().next();
-        flywheel = hardwareMap.get(DcMotorEx.class, "test");
+        flywheel = hardwareMap.get(DcMotorEx.class, "flywheel");
         flywheel.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
         flywheel.setDirection(DcMotorEx.Direction.FORWARD); // pick the correct one
 
         timer.reset();
 
         MultipleTelemetry mtelemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
-        waitForStart();
-
-
-
 
         double speed = 1.0;      // used to implement half speed; set to full on default
         boolean invertDir = false; // used to invert drive prompts
         int invDir = 1;  // used to activate inverted direction
         boolean keyA = false, keyB = false; // used for toggle keys
-
 
         // Initialize the hardware variables; Note that the name in quotes corresponds
         // to the name assigned in the robot configuration
@@ -137,30 +132,37 @@ public class TestTeleop extends LinearOpMode {
         leftBackDrive = hardwareMap.get(DcMotor.class, "leftBackDrive");
         rightFrontDrive = hardwareMap.get(DcMotor.class, "rightFrontDrive");
         rightBackDrive = hardwareMap.get(DcMotor.class, "rightBackDrive");
+
         intake = hardwareMap.get(DcMotor.class, "intake");
+
+        lowerTransfer = hardwareMap.get(Servo.class, "lower");
+        upperTransfer = hardwareMap.get(Servo.class, "upper");
 
         leftFrontDrive.setDirection(DcMotor.Direction.FORWARD);
         leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
         rightFrontDrive.setDirection(DcMotor.Direction.REVERSE);
         rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
 
-
+        leftFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         waitForStart();
-        while (opModeIsActive()) {
-            if (gamepad1.a) targetRPM++;
-            if (gamepad1.b) targetRPM--;
-            flywheelHold();
-            mtelemetry.addData("target", targetRPM);
-            mtelemetry.addData("RPM", smoothedRPM);
-            mtelemetry.addData("Power", correctPow);
-            mtelemetry.addData("Used Power", smoothedPow);
-            mtelemetry.update();
 
-            double leftFrontPower = gamepad1.left_stick_y + gamepad1.left_stick_x + gamepad1.right_stick_x;
-            double leftBackPower = gamepad1.left_stick_y - gamepad1.left_stick_x - gamepad1.right_stick_x;
-            double rightFrontPower = gamepad1.left_stick_y + gamepad1.left_stick_x - gamepad1.right_stick_x;
-            double rightBackPower = gamepad1.left_stick_y - gamepad1.left_stick_x + gamepad1.right_stick_x;
+        while (opModeIsActive()) {
+
+            if (gamepad2.dpad_up) targetRPM++;
+            if (gamepad2.dpad_down) targetRPM--;
+
+            if (gamepad2.y) targetRPM = 0;
+
+            flywheelHold();
+
+            double leftFrontPower = -gamepad1.left_stick_y + gamepad1.left_stick_x + gamepad1.right_stick_x;
+            double rightFrontPower = -gamepad1.left_stick_y - gamepad1.left_stick_x - gamepad1.right_stick_x;
+            double leftBackPower = -gamepad1.left_stick_y - gamepad1.left_stick_x + gamepad1.right_stick_x;
+            double rightBackPower = -gamepad1.left_stick_y + gamepad1.left_stick_x - gamepad1.right_stick_x;
             double max;
 
             // Normalize the values so no wheel power exceeds 100%.
@@ -176,13 +178,19 @@ public class TestTeleop extends LinearOpMode {
                 rightBackPower /= max;
             }
 
+            //leftFrontPower  = gamepad1.x ? 1.0 : 0.0;  // X gamepad
+            //leftBackPower   = gamepad1.a ? 1.0 : 0.0;  // A gamepad
+            //rightFrontPower = gamepad1.y ? 1.0 : 0.0;  // Y gamepad
+            //rightBackPower  = gamepad1.b ? 1.0 : 0.0;  // B gamepad
+
+            /*
             // half speed controls
-            if (gamepad1.dpad_up) {
+            if (gamepad1.a) {
                 if (keyA == false) {
                     keyA = !keyA;
                     switch ((int) (speed * 10)) {
                         case 10:
-                            speed = .05;
+                            speed = 0.5;
                             break;
                         case 5:
                             speed = 1.0;
@@ -194,7 +202,7 @@ public class TestTeleop extends LinearOpMode {
             }
 
             //inverted direction controls
-            if (gamepad1.dpad_down) {
+            if (gamepad1.b) {
                 if (keyB == false) {
                     keyB = !keyB;
                     invertDir = !invertDir;
@@ -207,17 +215,23 @@ public class TestTeleop extends LinearOpMode {
             } else {
                 invDir = 1;
             }
+            */
 
             leftFrontDrive.setPower(leftFrontPower * speed * invDir);
             leftBackDrive.setPower(leftBackPower * speed * invDir);
             rightFrontDrive.setPower(rightFrontPower * speed * invDir);
             rightBackDrive.setPower(rightBackPower * speed * invDir);
 
-            if (gamepad1.y) {
-                intake.setPower(.5);
-            } else {
-                intake.setPower(0.0);
-            }
+            intake.setPower(-gamepad2.right_trigger);
+            lowerTransfer.setPosition(0.5 - (0.5 * gamepad2.right_trigger));
+
+            upperTransfer.setPosition(0.5 - (0.5 * gamepad2.left_trigger));
+
+            mtelemetry.addData("target", targetRPM);
+            mtelemetry.addData("RPM", smoothedRPM);
+            mtelemetry.addData("Power", correctPow);
+            mtelemetry.addData("Used Power", smoothedPow);
+            mtelemetry.update();
         }
     }
 }
