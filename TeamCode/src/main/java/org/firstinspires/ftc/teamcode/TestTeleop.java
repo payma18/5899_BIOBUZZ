@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
+import com.qualcomm.robotcore.util.Range;   //hi
 
 
 @TeleOp(name="TestTeleop", group="Linear OpMode")
@@ -115,7 +115,7 @@ public class TestTeleop extends LinearOpMode {
         battery = hardwareMap.voltageSensor.iterator().next();
         flywheel = hardwareMap.get(DcMotorEx.class, "flywheel");
         flywheel.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
-        flywheel.setDirection(DcMotorEx.Direction.REVERSE); // pick the correct one
+        flywheel.setDirection(DcMotorEx.Direction.FORWARD); // pick the correct one
 
         timer.reset();
 
@@ -152,10 +152,10 @@ public class TestTeleop extends LinearOpMode {
 
         while (opModeIsActive()) {
 
-            if (gamepad1.dpad_up) targetRPM++;
-            if (gamepad1.dpad_down) targetRPM--;
+            if (gamepad2.dpad_up) targetRPM++;
+            if (gamepad2.dpad_down) targetRPM--;
 
-            if (gamepad1.y) targetRPM = 0;
+            if (gamepad2.y) targetRPM = 0;
 
             flywheelHold();
 
@@ -222,10 +222,10 @@ public class TestTeleop extends LinearOpMode {
             rightFrontDrive.setPower(rightFrontPower * speed * invDir);
             rightBackDrive.setPower(rightBackPower * speed * invDir);
 
-            intake.setPower(-gamepad1.right_trigger);
-            lowerTransfer.setPosition(0.5 - (0.5 * gamepad1.right_trigger));
+            intake.setPower(-gamepad2.right_trigger);
+            lowerTransfer.setPosition(0.5 - (0.5 * gamepad2.right_trigger));
 
-            upperTransfer.setPosition(0.5 - (0.5 * gamepad1.left_trigger));
+            upperTransfer.setPosition(0.5 - (0.5 * gamepad2.left_trigger));
 
             mtelemetry.addData("target", targetRPM);
             mtelemetry.addData("RPM", smoothedRPM);
