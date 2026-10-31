@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
+import com.qualcomm.robotcore.util.Range;   //hi
 
 
 @TeleOp(name="TestTeleop", group="Linear OpMode")
@@ -115,7 +115,7 @@ public class TestTeleop extends LinearOpMode {
         battery = hardwareMap.voltageSensor.iterator().next();
         flywheel = hardwareMap.get(DcMotorEx.class, "flywheel");
         flywheel.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
-        flywheel.setDirection(DcMotorEx.Direction.REVERSE); // pick the correct one
+        flywheel.setDirection(DcMotorEx.Direction.FORWARD); // pick the correct one
 
         timer.reset();
 
@@ -235,6 +235,3 @@ public class TestTeleop extends LinearOpMode {
         }
     }
 }
-
-
-
