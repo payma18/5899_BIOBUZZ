@@ -22,9 +22,9 @@ import org.firstinspires.ftc.teamcode.messages.ThreeDeadWheelInputsMessage;
 @Config
 public final class ThreeDeadWheelLocalizer implements Localizer {
     public static class Params {
-        public double par0YTicks = 2953.8389619930135; // y position of the first parallel encoder (in tick units)
-        public double par1YTicks = -3071.06316349408; // y position of the second parallel encoder (in tick units)
-        public double perpXTicks =  -3343.1623420139663; // x position of the perpendicular encoder (in tick units)
+        public double par0YTicks = -2711.958734249124; // y position of the first parallel encoder (in tick units)
+        public double par1YTicks = 2610.857989838296; // y position of the second parallel encoder (in tick units)
+        public double perpXTicks =  -2754.275982779764; // x position of the perpendicular encoder (in tick units)
     }
 
     public static Params PARAMS = new Params();
@@ -41,14 +41,15 @@ public final class ThreeDeadWheelLocalizer implements Localizer {
         // TODO: make sure your config has **motors** with these names (or change them)
         //   the encoders should be plugged into the slot matching the named motor
         //   see https://ftc-docs.firstinspires.org/en/latest/hardware_and_software_configuration/configuring/index.html
-        par0 = new OverflowEncoder(new RawEncoder(hardwareMap.get(DcMotorEx.class, "left_back_drive"))); //TODO: set to port 0 instead if youre getting error
-        par1 = new OverflowEncoder(new RawEncoder(hardwareMap.get(DcMotorEx.class, "right_front_drive")));
-        perp = new OverflowEncoder(new RawEncoder(hardwareMap.get(DcMotorEx.class, "right_back_drive")));
+        par0 = new OverflowEncoder(new RawEncoder(hardwareMap.get(DcMotorEx.class, "leftFrontDrive"))); //TODO: set to port 0 instead if youre getting error
+        par1 = new OverflowEncoder(new RawEncoder(hardwareMap.get(DcMotorEx.class, "rightBackDrive")));
+        perp = new OverflowEncoder(new RawEncoder(hardwareMap.get(DcMotorEx.class, "rightFrontDrive")));
 
         // TODO: reverse encoder directions if needed
         //   par0.setDirection(DcMotorSimple.Direction.REVERSE);
         par0.setDirection(DcMotorSimple.Direction.REVERSE);
         par1.setDirection(DcMotorSimple.Direction.REVERSE);
+        perp.setDirection(DcMotorSimple.Direction.FORWARD);
 
         this.inPerTick = inPerTick;
 
