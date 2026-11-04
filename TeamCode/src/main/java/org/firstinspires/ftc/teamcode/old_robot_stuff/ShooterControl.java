@@ -72,9 +72,9 @@ public class ShooterControl {
     boolean firstLoop = true;
     public ShooterControl(HardwareMap hwMap) {
 
-        flywheel = hwMap.get(DcMotorEx.class, "outtake_drive");
+        flywheel = hwMap.get(DcMotorEx.class, "flywheel");
         flywheel.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
-        flywheel.setDirection(DcMotorEx.Direction.REVERSE); // pick the correct one
+        flywheel.setDirection(DcMotorEx.Direction.FORWARD); // pick the correct one
 
         timer.reset();
     }
