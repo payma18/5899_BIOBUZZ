@@ -222,9 +222,10 @@ public class TestTeleop extends LinearOpMode {
             rightFrontDrive.setPower(rightFrontPower * speed * invDir);
             rightBackDrive.setPower(rightBackPower * speed * invDir);
 
-            intake.setPower(-gamepad2.right_trigger);
+            intake.setPower(gamepad2.right_trigger);
             lowerTransfer.setPosition(0.5 - (0.5 * gamepad2.right_trigger));
-
+            if (gamepad2.a){;
+            intake.setPower(-1);}
             upperTransfer.setPosition(0.5 - (0.5 * gamepad2.left_trigger));
 
             mtelemetry.addData("target", targetRPM);
