@@ -72,18 +72,18 @@ public class blue_auto_test extends LinearOpMode{
         public UpperTransfer(HardwareMap hwMap) {
             upperServo = hwMap.get(Servo.class, "upper");
         }
-        public class Spit1500 implements Action {
+        public class Spit3500 implements Action {
             private boolean started = false;
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
                 upperServo.setPosition(0.0);
-                sleep(1500);
+                sleep(3500);
 
                 return false; // true reruns action
             }
         }
-        public Action spit1500(){
-            return new Spit1500();
+        public Action spit3500(){
+            return new Spit3500();
         }
 
         public class Spin implements Action {
@@ -153,7 +153,7 @@ public class blue_auto_test extends LinearOpMode{
                 flywheel.setKp(0.009);
                 flywheel.setKi(0);
                 flywheel.setKd(0.0009);
-                flywheel.setTargetRPM(700); //TODO: find
+                flywheel.setTargetRPM(690); // // // // TODO: find a value for this
                 flywheel.flywheelHold();
                 return true; // true reruns action
             }
@@ -218,7 +218,7 @@ public class blue_auto_test extends LinearOpMode{
                     new SequentialAction(
 
                         one.build(),
-                        transfer.spit1500(),
+                        transfer.spit3500(),
                         transfer.stopSpinning(),
                         two.build(),
                         three.build()
