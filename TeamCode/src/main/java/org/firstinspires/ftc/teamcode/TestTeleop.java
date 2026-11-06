@@ -19,6 +19,7 @@ public class TestTeleop extends LinearOpMode {
     private Servo lowerTransfer;
     private Servo upperTransfer;
     VoltageSensor battery;
+    private Servo flower;
     enum FlywheelState {RAMP, HOLD, DOWN};
     FlywheelState state = FlywheelState.RAMP;
     private DcMotorEx flywheel;
@@ -116,7 +117,7 @@ public class TestTeleop extends LinearOpMode {
         flywheel = hardwareMap.get(DcMotorEx.class, "flywheel");
         flywheel.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
         flywheel.setDirection(DcMotorEx.Direction.FORWARD); // pick the correct one
-
+        flower = hardwareMap.get(Servo.class,"flower");
         timer.reset();
 
         MultipleTelemetry mtelemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
@@ -224,10 +225,16 @@ public class TestTeleop extends LinearOpMode {
 
             intake.setPower(gamepad2.right_trigger);
             lowerTransfer.setPosition(0.5 - (0.5 * gamepad2.right_trigger));
-            if (gamepad2.a){;
-            intake.setPower(-1);}
             upperTransfer.setPosition(0.5 - (0.5 * gamepad2.left_trigger));
 
+            if (gamepad2.a){
+                intake.setPower(-1);}
+
+            if (gamepad2.b) {
+                flower.setPosition(0.7);
+            }else{
+                flower.setPosition(1.0);
+            }
             mtelemetry.addData("target", targetRPM);
             mtelemetry.addData("RPM", smoothedRPM);
             mtelemetry.addData("Power", correctPow);
