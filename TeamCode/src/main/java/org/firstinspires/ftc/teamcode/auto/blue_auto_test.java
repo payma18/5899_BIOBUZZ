@@ -1,7 +1,10 @@
 package org.firstinspires.ftc.teamcode.auto;
 
 import androidx.annotation.NonNull;
+
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.ParallelAction;
@@ -69,22 +72,26 @@ public class blue_auto_test extends LinearOpMode{
     }
     public class UpperTransfer {
         private Servo upperServo;
+        private int spitCount = 0;
         public UpperTransfer(HardwareMap hwMap) {
             upperServo = hwMap.get(Servo.class, "upper");
         }
-        public class Spit3500 implements Action {
+        public class Spit5000 implements Action {
             private boolean started = false;
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
-                upperServo.setPosition(0.0);
-                sleep(3500);
-
-                return false; // true reruns action
+                if (spitCount > 150) {
+                    spitCount = 0;
+                }
+                if (spitCount > 30) {
+                    upperServo.setPosition(0.25);
+                }
+                sleep(50);
+                spitCount++;
+                return spitCount <= 150; // true reruns action
             }
         }
-        public Action spit3500(){
-            return new Spit3500();
-        }
+        public Action spit5000() { return new Spit5000(); }
 
         public class Spin implements Action {
             private boolean started = false;
@@ -183,9 +190,8 @@ public class blue_auto_test extends LinearOpMode{
 
         flywheel = new ShooterControl(hardwareMap);
 
-
         Pose2d poseInit = new Pose2d(0, 0, Math.toRadians(0));
-        Pose2d pose2 = new Pose2d(24, 0, Math.toRadians(0));
+        Pose2d pose2 = new Pose2d(9, 0, Math.toRadians(0));
         Pose2d pose3 = new Pose2d(24, 24, Math.toRadians(0));
 
         MecanumDrive drive = new MecanumDrive(hardwareMap, poseInit);
@@ -194,7 +200,7 @@ public class blue_auto_test extends LinearOpMode{
         Intaker intake = new Intaker(hardwareMap);
 
         TrajectoryActionBuilder one = drive.actionBuilder(poseInit)
-                .strafeToLinearHeading(new Vector2d(24, 0), Math.toRadians(0));//, new TranslationalVelConstraint(10));
+                .strafeToLinearHeading(new Vector2d(9, 0), Math.toRadians(0));//, new TranslationalVelConstraint(10));
 
         TrajectoryActionBuilder two = drive.actionBuilder(pose2)
                 .strafeToLinearHeading(new Vector2d(24, 24), Math.toRadians(0));//, new TranslationalVelConstraint(10)); //counterclockwise by default
@@ -218,7 +224,7 @@ public class blue_auto_test extends LinearOpMode{
                     new SequentialAction(
 
                         one.build(),
-                        transfer.spit3500(),
+                        transfer.spit5000(),
                         transfer.stopSpinning(),
                         two.build(),
                         three.build()
